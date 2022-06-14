@@ -41,10 +41,14 @@ void menuText(){
 	printf("(6) Plano para juntar dinheiro\n");
 	printf("(7) Simulador de empréstimo\n");
 	printf("(8) Calculo do imposto de renda\n");
+	printf("(0) Sair\n");
 	scanf("%d",&esc_menu);
 
 	switch(esc_menu){
-
+		
+		case 0:
+			break;
+			
 		case 1:
 			calcJurosReais();
 			break;
