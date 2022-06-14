@@ -10,7 +10,7 @@
  *NOTA(S): Mesmo bug de input da versão anterior, não resolvido( materia avançada)
 */
 
-int esc_menu;
+int esc_menu=0;
 
 void menuText();
 void calcJurosReais();
@@ -22,9 +22,7 @@ int main(){
 	setlocale(LC_ALL,"");
 	
 	do{
-		
 		menuText();
-		
 	}while(esc_menu != 0);
 	
 }
