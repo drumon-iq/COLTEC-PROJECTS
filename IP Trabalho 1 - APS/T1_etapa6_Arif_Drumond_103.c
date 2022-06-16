@@ -274,7 +274,7 @@ void poupFacul(){
 void planDin(){
 	
 	float renda, gBas, gVid, objF, taxa;
-	double totBas, totVid, totPoup;
+	double mesBas, mesVid, mesPoup, poup;
 	int meses;
 	
 	printf("PLANO PARA JUNTAR DINHEIRO\n");
@@ -289,12 +289,28 @@ void planDin(){
 	printf("Digite a taxa de juros mensal dos investimentos: \n");
 	scanf("%f",&taxa);
 	
+	if(renda<0||gBas<0||gVid<0||objF<0||taxa<0){
+		printf("Entrada de dados inválida, processo cancelado");
+		return;
+	}
 	
-	printf("Total em gastos básicos: R$ xxx.xx");
-	printf("Total em gastos com estilo de vida: R$ xxxx.xx");
-	printf("Total a ser poupado: R$ xxxx.xx");
-	printf("Tempo para atingir o objetivo financeiro: xxxx.xx");
+	taxa+=1;
+	mesBas = renda*(gBas/100);
+	mesVid = renda*(gVid/100);
+	mesPoup = renda - (mesVid+mesBas);
+	poup = mesPoup;
 	
+	for(meses = 1; poup<objF ; meses++){
+		
+		poup = poup*taxa+mesPoup;
+	}
+	
+	printf("Total em gastos básicos: R$ %.2lf\n", mesBas);
+	printf("Total em gastos com estilo de vida: R$ %.2lf\n", mesVid);
+	printf("Total a ser poupado: R$ %.2lf\n", mesPoup);
+	printf("Tempo para atingir o objetivo financeiro: %d meses\n", meses);
+	
+	//printf("\n%f\n",poup);
 }
 
 void simEmp(){
