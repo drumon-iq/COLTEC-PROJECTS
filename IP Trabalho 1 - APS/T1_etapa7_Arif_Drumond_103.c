@@ -195,6 +195,7 @@ void resEmerg(){
 	scanf("%f",&desp);
 	
 	if(sal<0||desp<0){
+		printf("Entrada de dados inválida, processo cancelado");
 		return;
 	}
 	
@@ -204,7 +205,8 @@ void resEmerg(){
 	
 	meses = resv/sobra;
 	
-	printf("\nSerao necessarios %.0f meses para atingir esse valor poupando R$ %.2f por  mes. \n",meses,sobra);
+	printf("\nSua reserva de emergencia deve ser de R$ %.2f", resv);
+	printf("\nSerao necessarios %.0f meses para atingir esse valor poupando R$ %.2f por mes. \n",meses,sobra);
 	
 }
 
