@@ -4,7 +4,7 @@ int main(){
 	
 	double sal, medSal, mSal=0;
 	char sexo,esc;
-	int pessSal=0, hom, mul, totP;
+	int pessSal=0, hom=0, mul=0, totP;
 	
 	do{
 		printf("Digite o valor do salario:\n");	
@@ -32,11 +32,11 @@ int main(){
 	medSal = medSal/totP;
 	pessSal = (pessSal*100)/totP;
 	
-	printf("Media de salario dos entrevistados: %lf\n", medSal );
-	printf("Percentual de homens: %d\n", (hom*100)/totP );
-	printf("Percentual de mulheres: %d\n", (mul*100)/totP );
-	printf("Maior salario: %lf\n", mSal);
-	printf("Pessoas com salario inferior a 998,00: %d\n", pessSal);
+	printf("Media de salario dos entrevistados: %.2lf\n", medSal );
+	printf("Percentual de homens: %d %%\n", (hom*100)/totP );
+	printf("Percentual de mulheres: %d %%\n", (mul*100)/totP );
+	printf("Maior salario: %.2lf\n", mSal);
+	printf("Pessoas com salario inferior a 998,00: %d %%\n", pessSal);
 
 }
 
