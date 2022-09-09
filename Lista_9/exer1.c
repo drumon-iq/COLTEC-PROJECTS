@@ -2,9 +2,9 @@ a.	Falso
 b.	Verdadeiro
 c.	Falso
 d.	Verdadeiro
-e.	Verdadeiro
+e.	Falso
 f.	Falso
-g.	
+g.	Verdadeiro	
 h.	Falso
 i.	Falso
 k.	Verdadeiro
