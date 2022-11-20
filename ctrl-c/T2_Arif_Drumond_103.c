@@ -7,38 +7,41 @@ typedef struct sTentativa{
 	char simOuNao[5];
 }tentativa;
 
-int validaPalavra(char palavra[], int tamanho, char anterior);
+int validaPalavra(char palavra[], int size_pal, char last_char, int tot_pal, tentativa *);
 
-int main(){
-	tentativa *try = (tentativa*) malloc(5*sizeof(tentativa));
+int main()
+{
 
-	int erros=0, controle, tamanho=0, rodadas=0, maiuscula=0, n=0, win=0;
-	char nome[100], anterior = '\0';
+	tentativa *lista_pal = (tentativa*) malloc(5*sizeof(tentativa));
 
-	FILE *fp;
+	int qntd_erro=0, size_pal=0, total_pal=0, win=0;
+	char user[100], last_char = '\0';
 
 	printf("Bem vindo ao Piquenique na Lua\n");
-	printf("Digite o nome do jogador:\n");
+	printf("Digite o nick do jogador:\n");
 
-	fgets(nome, 94, stdin);
-	for (int i = 0; '\0' != nome[i]; ++i){
-		if (nome[i] == '\n' ){
-			nome[i] = '\0';
+	fgets(user, 94, stdin);
+	for (int i = 0; '\0' != user[i]; ++i){
+		if (user[i] == '\n' ){
+			user[i] = '\0';
 		}
 	}
 
-	strcat(nome, ".dat");
-	fp = fopen(nome, "w+");
+	FILE *history;
 
-	if(fp == NULL) {
+	strcat(user, ".dat");
+	history = fopen(user, "w+");
+
+	if(history == NULL) {
 		printf("Nao foi possivel abrir o arquivo de dados, bailling out\n");
 		return -1;
 	}
 
-	fprintf(fp, "Acertos do jogo :\n=============================================");
+	fprintf(history, "Acertos do jogo :\n=============================================");
 
-	printf("-----------------REGRAS----------------\n");
-	printf("Digite uma palavra e te direi se vc pode levar o que escreveu para o piquenique.\n");
+	printf("\n================REGRAS==================\n");
+	printf("Digite o nome do item que quer levar ao piquinique\n");
+	printf("Com base em criterios secretos, te direi se pode leva-lo ou nao\n");
 	printf("Se ganha ao acertar 5 palavras consecutivamente\n");
 	printf("Caso voce erre 30 vezes ao todo voce perde\n");
 	printf("Digite h para consultar o seu historico de tentativas.\n");
@@ -46,16 +49,14 @@ int main(){
 	printf("\n=====<>=====<>=====<>=====<>=====<>=====\n");
 
 	while(win==0){
-		if(strcmp(try[rodadas-1].simOuNao,"sim")==0 && strcmp(try[rodadas-2].simOuNao,"sim")==0 && strcmp(try[rodadas-3].simOuNao,"sim")==0){
-			if(strcmp(try[rodadas-4].simOuNao,"sim")==0 && strcmp(try[rodadas-5].simOuNao,"sim")==0){
-				printf("\n=====<>=====<>=====<>=====<>=====<>=====\n");
-				printf("Voce ganhou o jogo!!!\n");
-				win = 1;
-				break;
-			}
+		if(strcmp(lista_pal[total_pal-4].simOuNao,"sim")==0 && strcmp(lista_pal[total_pal-5].simOuNao,"sim")==0 && strcmp(lista_pal[total_pal-1].simOuNao,"sim")==0 && strcmp(lista_pal[total_pal-2].simOuNao,"sim")==0 && strcmp(lista_pal[total_pal-3].simOuNao,"sim")==0){
+			printf("\n=====<>=====<>=====<>=====<>=====<>=====\n");
+			printf("Voce ganhou o jogo!!!\n");
+			win = 1;
+			break;
 		}
 
-		if(erros == 30){
+		if(qntd_erro == 30){
 			printf("\n=====<>=====<>=====<>=====<>=====<>=====\n");
 			printf("Voce chegou a 30 erros, voce perdeu!\n");
 			win = -1;
@@ -63,92 +64,92 @@ int main(){
 		}
 
 		printf("Digite a palavra:\n");
-		fgets(try[rodadas].palavra, 99, stdin);
+		fgets(lista_pal[total_pal].palavra, 99, stdin);
 
-		do{
-			if(try[rodadas].palavra[n] == '\0'){
-				break;
-			}
-			if(try[rodadas].palavra[n] >= 65 && try[rodadas].palavra[n] <= 90){
-				printf("Lembre-se que apenas letras minusculas sao aceitas\n\n");
-				maiuscula = 1;
-				break;
-			}
-			n++;
-		}while(maiuscula==0);
+		for(int a=0; a < strlen(lista_pal[total_pal].palavra) ; a++) {
 
-		if(maiuscula == 1){
-			continue;
+			if(lista_pal[total_pal].palavra[a] == '\n'){
+				lista_pal[total_pal].palavra[a] = '\0';
+			}
+
+			if(lista_pal[total_pal].palavra[a] >= 65 && lista_pal[total_pal].palavra[a] <= 90){
+				lista_pal[total_pal].palavra[a] += 32;
+			}
 		}
 
-		else if (strcmp(try[rodadas].palavra,"q\n")==0){
+		if ( lista_pal[total_pal].palavra[0] == 'q' ){
 			win = -1;
 		}
 
-		else if (strcmp(try[rodadas].palavra,"h\n")==0){
-			printf("----------HISTORICO DE TENTATIVAS----------\n");
-			if(rodadas==0){
-				printf("Voce ainda nao fez nenhuma tentativa\n");
+		else if ( lista_pal[total_pal].palavra[0] == 'h'){
+			printf("\n=========HISTORICO DE TENTATIVAS========\n");
+
+			for (int i = 0; i < total_pal; ++i){
+				printf("Item tentada: %s\n", lista_pal[i].palavra);
+				printf("Pode ser levado? %s\n\n", lista_pal[i].simOuNao);
 			}
-			else{
-				for (int i = 0; i < rodadas; ++i){
-					printf("Tentativa %d:\n", i+1);
-					printf("Palavra tentada: %s", try[i].palavra);
-					printf("Palavra aceita? %s\n\n", try[i].simOuNao);
-				}
-			}
+
 			printf("\n=====<>=====<>=====<>=====<>=====<>=====\n");
 		}
 
 		else{
-			rodadas++;
-			try = (tentativa*) realloc(try, (rodadas+5)*sizeof(tentativa));
-			tamanho = strlen(try[rodadas-1].palavra)-1;
-			controle = validaPalavra(try[rodadas-1].palavra, tamanho, anterior);
-			anterior = try[rodadas-1].palavra[tamanho-1];
 
-			for(int i=0; i<(rodadas-1); ++i) {
-				if(strncmp(try[rodadas-1].palavra, try[i].palavra, tamanho) == 0 && rodadas != 1) {
-					printf("Palavra repetida\n");
-					erros++;
-					controle = 0;
-				}
+			size_pal = strlen(lista_pal[total_pal].palavra);
+
+			last_char = lista_pal[total_pal].palavra[size_pal-1];
+
+			if(validaPalavra(lista_pal[total_pal].palavra, size_pal, last_char, total_pal, lista_pal) == 1){
+
+				printf("Correto! %s pode ser levado!\n", lista_pal[total_pal].palavra);
+				printf("Voce ainda tem %d tentativas!\n\n", 30-qntd_erro);
+
+				strcpy(lista_pal[total_pal].simOuNao, "sim");
+
+				fprintf(history, "\n%s", lista_pal[total_pal].palavra);
+
+			} else {
+
+				qntd_erro++;
+				printf("Errado! %s nao pode ser levado!\n", lista_pal[total_pal].palavra);
+				printf("%d tentativas restantes.\n\n", 30-qntd_erro);
+
+				strcpy(lista_pal[total_pal].simOuNao, "nao");
+
 			}
 
-			if(controle == 1){
-				printf("PARABENS! Voce pode levar %s", try[rodadas-1].palavra);
-				printf("Voce ainda pode errar mais %d vezes.\n\n", 30-erros);
-				strcpy(try[rodadas-1].simOuNao, "sim");
-				fprintf(fp, "%s", try[rodadas-1].palavra);
-			}
-			if(controle == 0){
-				erros++;
-				//printf("%c\n", anterior);
-				printf("Voce nao pode levar %s", try[rodadas-1].palavra);
-				printf("Voce ainda pode errar mais %d vezes.\n\n", 30-erros);
-				strcpy(try[rodadas-1].simOuNao, "nao");
-			}
+			total_pal++;
+			lista_pal = (tentativa*) realloc(lista_pal, (total_pal+5)*sizeof(tentativa));
 		}
 	}
 
-	free(try);
-	fclose(fp);
+	free(lista_pal);
+	fclose(history);
 
 	return 0;
+
 }
 
-int validaPalavra(char palavra[], int tamanho, char anterior){
+int validaPalavra(char palavra[], int size_pal, char last_char, int tot_pal, tentativa *lista_pal)
+{
+
+	for(int i=0; i<(tot_pal-1); ++i) {
+		if(strncmp(lista_pal[tot_pal].palavra, lista_pal[i].palavra, size_pal) == 0 && tot_pal != 0) {
+
+			printf("Palavra repetida\n");
+			return 0;
+		}
+	}
 
 	if(palavra[0]=='a'){
 		return 1;
 	}
-	else if(palavra[tamanho-1]=='r'){
+	else if(palavra[size_pal-1]=='r'){
 		return 1;
 	}
-	else if(palavra[0]==anterior){
+	else if(palavra[0]==last_char){
 		return 1;
 	}
-	else if(tamanho==10){
+	else if(size_pal==10){
 		return 1;
 	}
 	else if(strncmp("certamente eh", palavra, 13) == 0) {
@@ -158,4 +159,3 @@ int validaPalavra(char palavra[], int tamanho, char anterior){
 		return 0;
 	}
 }
-
